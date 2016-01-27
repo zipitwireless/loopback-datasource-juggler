@@ -3,9 +3,8 @@ var should = require('./init.js');
 var assert = require('assert');
 var async = require('async');
 
-var jdb = require('../');
-var ModelBuilder = jdb.ModelBuilder;
-var DataSource = jdb.DataSource;
+var ModelBuilder = require('loopback-model/lib/model-builder').ModelBuilder;
+var DataSource = require('..').DataSource;
 
 describe('ModelBuilder define model', function () {
 

@@ -1,4 +1,4 @@
-var ModelBuilder = require('../').ModelBuilder;
+var ModelBuilder = require('loopback-model/lib/model-builder').ModelBuilder;
 var should = require('./init');
 var Promise = require('bluebird');
 

@@ -2,7 +2,7 @@
 var should = require('./init.js');
 
 var Schema = require('../').Schema;
-var ModelBuilder = require('../').ModelBuilder;
+var ModelBuilder = require('loopback-model/lib/model-builder').ModelBuilder;
 
 describe('JSON property', function () {
   var dataSource, Model;

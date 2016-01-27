@@ -12,7 +12,7 @@ module.exports = require('should');
  }
  */
 
-var ModelBuilder = require('../').ModelBuilder;
+var ModelBuilder = require('loopback-model/lib/model-builder').ModelBuilder;
 var Schema = require('../').Schema;
 
 if (!('getSchema' in global)) {

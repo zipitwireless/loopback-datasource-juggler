@@ -1,8 +1,8 @@
 // This test written in mocha+should.js
 var should = require('./init.js');
 
-var jdb = require('../');
-var ModelBuilder = jdb.ModelBuilder;
+var jdb = require('..');
+var ModelBuilder = require('loopback-model/lib/model-builder').ModelBuilder;
 var DataSource = jdb.DataSource;
 var Memory = require('../lib/connectors/memory');
 

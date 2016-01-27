@@ -1,4 +1,4 @@
-exports.ModelBuilder = exports.LDL = require('./lib/model-builder.js').ModelBuilder;
+exports.ModelBuilder = exports.LDL = require('loopback-model/lib/model-builder');
 exports.DataSource = exports.Schema = require('./lib/datasource.js').DataSource;
 exports.ModelBaseClass = require('./lib/model.js');
 exports.GeoPoint = require('loopback-model').Geo.GeoPoint;

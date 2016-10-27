@@ -13,9 +13,9 @@ var jdb = require('../');
 var ModelBuilder = jdb.ModelBuilder;
 var DataSource = jdb.DataSource;
 
-describe('ModelBuilder', function() {
+describe('ModelBuilder define model', function() {
 
-  it('supports plain models', function(done) {
+  it('should be able to define plain models', function(done) {
     var modelBuilder = new ModelBuilder();
 
     var User = modelBuilder.define('User', {
@@ -45,7 +45,7 @@ describe('ModelBuilder', function() {
     done(null, User);
   });
 
-  it('ignores unknown properties in strict mode', function(done) {
+  it('should not take unknown properties in strict mode', function(done) {
     var modelBuilder = new ModelBuilder();
 
     var User = modelBuilder.define('User', {name: String, bio: String}, {strict: true});
@@ -62,7 +62,7 @@ describe('ModelBuilder', function() {
     done(null, User);
   });
 
-  it('ignores non-predefined properties in strict mode', function(done) {
+  it('should ignore non-predefined properties in strict mode', function(done) {
     var modelBuilder = new ModelBuilder();
 
     var User = modelBuilder.define('User', {name: String, bio: String}, {strict: true});
@@ -86,7 +86,7 @@ describe('ModelBuilder', function() {
     done(null, User);
   });
 
-  it('throws an error when unknown properties are used if strict=throw', function(done) {
+  it('should throw when unknown properties are used if strict=throw', function(done) {
     var modelBuilder = new ModelBuilder();
 
     var User = modelBuilder.define('User', {name: String, bio: String}, {strict: 'throw'});
@@ -100,7 +100,7 @@ describe('ModelBuilder', function() {
     done(null, User);
   });
 
-  it('supports open models', function(done) {
+  it('should be able to define open models', function(done) {
     var modelBuilder = new ModelBuilder();
 
     var User = modelBuilder.define('User', {}, {strict: false});
@@ -115,7 +115,7 @@ describe('ModelBuilder', function() {
     done(null, User);
   });
 
-  it('accepts non-predefined properties in non-strict mode', function(done) {
+  it('should take non-predefined properties in non-strict mode', function(done) {
     var modelBuilder = new ModelBuilder();
 
     var User = modelBuilder.define('User', {name: String, bio: String}, {strict: false});
@@ -140,7 +140,7 @@ describe('ModelBuilder', function() {
     done(null, User);
   });
 
-  it('uses non-strict mode by default', function(done) {
+  it('should use false as the default value for strict', function(done) {
     var modelBuilder = new ModelBuilder();
 
     var User = modelBuilder.define('User', {});
@@ -155,7 +155,7 @@ describe('ModelBuilder', function() {
     done(null, User);
   });
 
-  it('supports nested model definitions', function(done) {
+  it('should be able to define nesting models', function(done) {
     var modelBuilder = new ModelBuilder();
 
     // simplier way to describe model
@@ -217,7 +217,7 @@ describe('ModelBuilder', function() {
     done(null, User);
   });
 
-  it('allows models to be referenced by name before they are defined', function(done) {
+  it('should be able to reference models by name before they are defined', function(done) {
     var modelBuilder = new ModelBuilder();
 
     var User = modelBuilder.define('User', {name: String, address: 'Address'});
@@ -249,7 +249,7 @@ describe('ModelBuilder', function() {
     done(null, User);
   });
 
-  it('defines an id property for composite ids', function() {
+  it('should define an id property for composite ids', function() {
     var modelBuilder = new ModelBuilder();
     var Follow = modelBuilder.define('Follow', {
       followerId: {type: String, id: 1},
@@ -275,7 +275,7 @@ describe('DataSource ping', function() {
     cb(new Error('bad connection 2'));
   };
 
-  it('reports connection errors during ping', function(done) {
+  it('should report connection errors during ping', function(done) {
     ds.ping(function(err) {
       (!!err).should.be.true;
       err.message.should.be.eql('bad connection 2');
@@ -283,7 +283,7 @@ describe('DataSource ping', function() {
     });
   });
 
-  it('cancels invocation after timeout', function(done) {
+  it('should cancel invocation after timeout', function(done) {
     ds.connected = false; // Force connect
     var Post = ds.define('Post', {
       title: {type: String, length: 255},
@@ -297,7 +297,7 @@ describe('DataSource ping', function() {
 });
 
 describe('DataSource define model', function() {
-  it('supports plain model definitions', function() {
+  it('should be able to define plain models', function() {
     var ds = new DataSource('memory');
 
 // define models
@@ -402,7 +402,7 @@ describe('DataSource define model', function() {
 
   });
 
-  it('emits events during attach', function() {
+  it('should emit events during attach', function() {
     var ds = new DataSource('memory');
     var modelBuilder = new ModelBuilder();
 
@@ -430,7 +430,7 @@ describe('DataSource define model', function() {
     assert.equal(dataSourceAttached, 1);
   });
 
-  it('ignores unknown properties in strict mode', function(done) {
+  it('should not take unknown properties in strict mode', function(done) {
     var ds = new DataSource('memory');
 
     var User = ds.define('User', {name: String, bio: String}, {strict: true});
@@ -448,7 +448,7 @@ describe('DataSource define model', function() {
     });
   });
 
-  it('throws an error when unknown properties are used if strict=throw', function(done) {
+  it('should throw when unknown properties are used if strict=throw', function(done) {
     var ds = new DataSource('memory');
 
     var User = ds.define('User', {name: String, bio: String}, {strict: 'throw'});
@@ -463,7 +463,7 @@ describe('DataSource define model', function() {
   });
 
   describe('strict mode "validate"', function() {
-    it('reports validation errors for unknown properties', function() {
+    it('should report validation error for unknown properties', function() {
       var ds = new DataSource('memory');
       var User = ds.define('User', {name: String}, {strict: 'validate'});
       var user = new User({name: 'Joe', age: 20});
@@ -473,7 +473,7 @@ describe('DataSource define model', function() {
     });
   });
 
-  it('supports open model definitions', function(done) {
+  it('should be able to define open models', function(done) {
     var ds = new DataSource('memory');
 
     var User = ds.define('User', {}, {strict: false});
@@ -496,7 +496,7 @@ describe('DataSource define model', function() {
     });
   });
 
-  it('uses non-strict mode by default', function(done) {
+  it('should use false as the default value for strict', function(done) {
     var ds = new DataSource('memory');
 
     var User = ds.define('User', {});
@@ -512,7 +512,7 @@ describe('DataSource define model', function() {
     });
   });
 
-  it('uses strict mode by default for relational DBs', function(done) {
+  it('should use true as the default value for strict for relational DBs', function(done) {
     var ds = new DataSource('memory');
     ds.connector.relational = true; // HACK
 
@@ -530,7 +530,7 @@ describe('DataSource define model', function() {
     done(null, User);
   });
 
-  it('throws an error with unknown properties in non-strict mode for relational DBs', function(done) {
+  it('should throw when unknown properties are used if strict=false for relational DBs', function(done) {
     var ds = new DataSource('memory');
     ds.connector.relational = true; // HACK
 
@@ -545,7 +545,7 @@ describe('DataSource define model', function() {
     done(null, User);
   });
 
-  it('changes the property value for save in non-strict mode', function(done) {
+  it('should change the property value for save if strict=false', function(done) {
     var ds = new DataSource('memory');// define models
     var Post = ds.define('Post');
 
@@ -580,7 +580,7 @@ describe('DataSource define model', function() {
 
   });
 
-  it('updates instances with unknown properties in non-strict mode', function(done) {
+  it('should update the instance with unknown properties', function(done) {
     var ds = new DataSource('memory');// define models
     var Post;
     Post = ds.define('Post', {
@@ -641,7 +641,7 @@ describe('DataSource define model', function() {
     done();
   });
 
-  it('allows an explicit remoting path', function() {
+  it('should allow an explicit remoting path', function() {
     var ds = new DataSource('memory');
 
     var User = ds.define('User', {name: String, bio: String}, {
@@ -650,7 +650,7 @@ describe('DataSource define model', function() {
     User.http.path.should.equal('/accounts');
   });
 
-  it('allows an explicit remoting path with leading /', function() {
+  it('should allow an explicit remoting path with leading /', function() {
     var ds = new DataSource('memory');
 
     var User = ds.define('User', {name: String, bio: String}, {
@@ -661,8 +661,8 @@ describe('DataSource define model', function() {
 
 });
 
-describe('Model loaded with a base', function() {
-  it('has a base class according to the base option', function() {
+describe('Load models with base', function() {
+  it('should set up base class via base option', function() {
     var ds = new ModelBuilder();
 
     var User = ds.define('User', {name: String});
@@ -687,7 +687,7 @@ describe('Model loaded with a base', function() {
     }
   });
 
-  it('inherits properties from base model', function() {
+  it('should inherit properties from base option', function() {
     var ds = new ModelBuilder();
 
     var User = ds.define('User', {name: String});
@@ -698,7 +698,7 @@ describe('Model loaded with a base', function() {
     Customer.definition.properties.name.should.have.property('type', String);
   });
 
-  it('inherits properties by clone from base model', function() {
+  it('should inherit properties by clone from base option', function() {
     var ds = new ModelBuilder();
 
     var User = ds.define('User', {name: String});
@@ -714,7 +714,7 @@ describe('Model loaded with a base', function() {
       Customer2.definition.properties.name);
   });
 
-  it('can remove properties from base model', function() {
+  it('should revert properties from base model', function() {
     var ds = new ModelBuilder();
 
     var User = ds.define('User', {username: String, email: String});
@@ -737,7 +737,7 @@ describe('Model loaded with a base', function() {
     u.should.have.property('email', 'x@y.com');
   });
 
-  it('can configure base class via parent argument', function() {
+  it('should set up base class via parent arg', function() {
     var ds = new ModelBuilder();
 
     var User = ds.define('User', {name: String});
@@ -775,169 +775,174 @@ describe('Models attached to a dataSource', function() {
     Post.destroyAll(done);
   });
 
-  describe('updateOrCreate', function() {
-    it('updates instances', function(done) {
-      Post.create({title: 'a', content: 'AAA'}, function(err, post) {
-        post.title = 'b';
-        Post.updateOrCreate(post, function(err, p) {
-          should.not.exist(err);
-          p.id.should.be.equal(post.id);
-          p.content.should.be.equal(post.content);
-          should.not.exist(p._id);
-
-          Post.findById(post.id, function(err, p) {
-            p.id.should.be.equal(post.id);
-            should.not.exist(p._id);
-            p.content.should.be.equal(post.content);
-            p.title.should.be.equal('b');
-            done();
-          });
-        });
-      });
-    });
-
-    it('updates instances without removing existing properties', function(done) {
-      Post.create({title: 'a', content: 'AAA', comments: ['Comment1']}, function(err, post) {
-        post = post.toObject();
-        delete post.title;
-        delete post.comments;
-        Post.updateOrCreate(post, function(err, p) {
-          should.not.exist(err);
-          p.id.should.be.equal(post.id);
-          p.content.should.be.equal(post.content);
-          should.not.exist(p._id);
-
-          Post.findById(post.id, function(err, p) {
-            p.id.should.be.equal(post.id);
-            should.not.exist(p._id);
-            p.content.should.be.equal(post.content);
-            p.title.should.be.equal('a');
-            p.comments.length.should.be.equal(1);
-            p.comments[0].should.be.equal('Comment1');
-            done();
-          });
-        });
-      });
-    });
-
-    it('creates a new instance if it does not exist', function(done) {
-      var post = {id: 123, title: 'a', content: 'AAA'};
+  it('updateOrCreate should update the instance', function(done) {
+    Post.create({title: 'a', content: 'AAA'}, function(err, post) {
+      post.title = 'b';
       Post.updateOrCreate(post, function(err, p) {
         should.not.exist(err);
-        p.title.should.be.equal(post.title);
-        p.content.should.be.equal(post.content);
         p.id.should.be.equal(post.id);
+        p.content.should.be.equal(post.content);
+        should.not.exist(p._id);
 
-        Post.findById(p.id, function(err, p) {
+        Post.findById(post.id, function(err, p) {
           p.id.should.be.equal(post.id);
           should.not.exist(p._id);
           p.content.should.be.equal(post.content);
-          p.title.should.be.equal(post.title);
-          p.id.should.be.equal(post.id);
+          p.title.should.be.equal('b');
+
           done();
         });
       });
+
     });
   });
 
-  describe('save', function() {
-    it('updates instance with the same id', function(done) {
-      Post.create({title: 'a', content: 'AAA'}, function(err, post) {
-        post.title = 'b';
-        post.save(function(err, p) {
-          should.not.exist(err);
-          p.id.should.be.equal(post.id);
-          p.content.should.be.equal(post.content);
-          should.not.exist(p._id);
-
-          Post.findById(post.id, function(err, p) {
-            p.id.should.be.equal(post.id);
-            should.not.exist(p._id);
-            p.content.should.be.equal(post.content);
-            p.title.should.be.equal('b');
-            done();
-          });
-        });
-
-      });
-    });
-
-    it('updates the instance without removing existing properties', function(done) {
-      Post.create({title: 'a', content: 'AAA'}, function(err, post) {
-        delete post.title;
-        post.save(function(err, p) {
-          should.not.exist(err);
-          p.id.should.be.equal(post.id);
-          p.content.should.be.equal(post.content);
-          should.not.exist(p._id);
-
-          Post.findById(post.id, function(err, p) {
-            p.id.should.be.equal(post.id);
-            should.not.exist(p._id);
-            p.content.should.be.equal(post.content);
-            p.title.should.be.equal('a');
-            done();
-          });
-        });
-      });
-    });
-
-    it('creates a new instance if it does not exist', function(done) {
-      var post = new Post({id: '123', title: 'a', content: 'AAA'});
-      post.save(post, function(err, p) {
+  it('updateOrCreate should update the instance without removing existing properties', function(done) {
+    Post.create({title: 'a', content: 'AAA', comments: ['Comment1']}, function(err, post) {
+      post = post.toObject();
+      delete post.title;
+      delete post.comments;
+      Post.updateOrCreate(post, function(err, p) {
         should.not.exist(err);
-        p.title.should.be.equal(post.title);
-        p.content.should.be.equal(post.content);
         p.id.should.be.equal(post.id);
+        p.content.should.be.equal(post.content);
+        should.not.exist(p._id);
 
-        Post.findById(p.id, function(err, p) {
+        Post.findById(post.id, function(err, p) {
           p.id.should.be.equal(post.id);
           should.not.exist(p._id);
           p.content.should.be.equal(post.content);
-          p.title.should.be.equal(post.title);
-          p.id.should.be.equal(post.id);
+          p.title.should.be.equal('a');
+          p.comments.length.should.be.equal(1);
+          p.comments[0].should.be.equal('Comment1');
           done();
         });
       });
+
     });
+  });
+
+  it('updateOrCreate should create a new instance if it does not exist', function(done) {
+    var post = {id: 123, title: 'a', content: 'AAA'};
+    Post.updateOrCreate(post, function(err, p) {
+      should.not.exist(err);
+      p.title.should.be.equal(post.title);
+      p.content.should.be.equal(post.content);
+      p.id.should.be.equal(post.id);
+
+      Post.findById(p.id, function(err, p) {
+        p.id.should.be.equal(post.id);
+        should.not.exist(p._id);
+        p.content.should.be.equal(post.content);
+        p.title.should.be.equal(post.title);
+        p.id.should.be.equal(post.id);
+
+        done();
+      });
+    });
+
+  });
+
+  it('save should update the instance with the same id', function(done) {
+    Post.create({title: 'a', content: 'AAA'}, function(err, post) {
+      post.title = 'b';
+      post.save(function(err, p) {
+        should.not.exist(err);
+        p.id.should.be.equal(post.id);
+        p.content.should.be.equal(post.content);
+        should.not.exist(p._id);
+
+        Post.findById(post.id, function(err, p) {
+          p.id.should.be.equal(post.id);
+          should.not.exist(p._id);
+          p.content.should.be.equal(post.content);
+          p.title.should.be.equal('b');
+
+          done();
+        });
+      });
+
+    });
+  });
+
+  it('save should update the instance without removing existing properties', function(done) {
+    Post.create({title: 'a', content: 'AAA'}, function(err, post) {
+      delete post.title;
+      post.save(function(err, p) {
+        should.not.exist(err);
+        p.id.should.be.equal(post.id);
+        p.content.should.be.equal(post.content);
+        should.not.exist(p._id);
+
+        Post.findById(post.id, function(err, p) {
+          p.id.should.be.equal(post.id);
+          should.not.exist(p._id);
+          p.content.should.be.equal(post.content);
+          p.title.should.be.equal('a');
+
+          done();
+        });
+      });
+
+    });
+  });
+
+  it('save should create a new instance if it does not exist', function(done) {
+    var post = new Post({id: '123', title: 'a', content: 'AAA'});
+    post.save(post, function(err, p) {
+      should.not.exist(err);
+      p.title.should.be.equal(post.title);
+      p.content.should.be.equal(post.content);
+      p.id.should.be.equal(post.id);
+
+      Post.findById(p.id, function(err, p) {
+        p.id.should.be.equal(post.id);
+        should.not.exist(p._id);
+        p.content.should.be.equal(post.content);
+        p.title.should.be.equal(post.title);
+        p.id.should.be.equal(post.id);
+
+        done();
+      });
+    });
+
   });
 });
 
 describe('DataSource connector types', function() {
-  it('returns an array of types using getTypes', function() {
+  it('should return an array of types', function() {
     var ds = new DataSource('memory');
     var types = ds.getTypes();
     assert.deepEqual(types, ['db', 'nosql', 'memory']);
   });
 
-  describe('supportTypes', function() {
-    it('tests supported types by string', function() {
-      var ds = new DataSource('memory');
-      var result = ds.supportTypes('db');
-      assert(result);
-    });
-
-    it('tests supported types by array', function() {
-      var ds = new DataSource('memory');
-      var result = ds.supportTypes(['db', 'memory']);
-      assert(result);
-    });
-
-    it('tests unsupported types by string', function() {
-      var ds = new DataSource('memory');
-      var result = ds.supportTypes('rdbms');
-      assert(!result);
-    });
-
-    it('tests unsupported types by array', function() {
-      var ds = new DataSource('memory');
-      var result = ds.supportTypes(['rdbms', 'memory']);
-      assert(!result);
-
-      result = ds.supportTypes(['rdbms']);
-      assert(!result);
-    });
+  it('should test supported types by string', function() {
+    var ds = new DataSource('memory');
+    var result = ds.supportTypes('db');
+    assert(result);
   });
+
+  it('should test supported types by array', function() {
+    var ds = new DataSource('memory');
+    var result = ds.supportTypes(['db', 'memory']);
+    assert(result);
+  });
+
+  it('should test unsupported types by string', function() {
+    var ds = new DataSource('memory');
+    var result = ds.supportTypes('rdbms');
+    assert(!result);
+  });
+
+  it('should test unsupported types by array', function() {
+    var ds = new DataSource('memory');
+    var result = ds.supportTypes(['rdbms', 'memory']);
+    assert(!result);
+
+    result = ds.supportTypes(['rdbms']);
+    assert(!result);
+  });
+
 });
 
 describe('DataSource constructor', function() {
@@ -956,56 +961,56 @@ describe('DataSource constructor', function() {
     };
   };
 
-  it('resolves connector by path', function() {
+  it('should resolve connector by path', function() {
     var connector = DataSource._resolveConnector(__dirname + '/../lib/connectors/memory');
     assert(connector.connector);
   });
-  it('resolves connector by internal name', function() {
+  it('should resolve connector by internal name', function() {
     var connector = DataSource._resolveConnector('memory');
     assert(connector.connector);
   });
-  it('resolves connector by module name starting with loopback-connector-', function() {
+  it('should try to resolve connector by module name starts with loopback-connector-', function() {
     var connector = DataSource._resolveConnector('loopback-connector-xyz', loader);
     assert(connector.connector);
   });
-  it('resolves connector by short module name with full name first', function() {
+  it('should try to resolve connector by short module name with full name first', function() {
     var connector = DataSource._resolveConnector('xyz', loader);
     assert(connector.connector);
     assert.equal(connector.connector.name, 'loopback-connector-xyz');
   });
-  it('resolves connector by short module name', function() {
+  it('should try to resolve connector by short module name', function() {
     var connector = DataSource._resolveConnector('abc', loader);
     assert(connector.connector);
     assert.equal(connector.connector.name, 'abc');
   });
-  it('resolves connector by short module name for known connectors', function() {
+  it('should try to resolve connector by short module name for known connectors', function() {
     var connector = DataSource._resolveConnector('oracle', loader);
     assert(connector.connector);
     assert.equal(connector.connector.name, 'loopback-connector-oracle');
   });
-  it('resolves connector by full module name', function() {
+  it('should try to resolve connector by full module name', function() {
     var connector = DataSource._resolveConnector('loopback-xyz', loader);
     assert(connector.connector);
   });
-  it('fails to resolve connector by module name starting with loopback-connector-', function() {
+  it('should fail to resolve connector by module name starts with loopback-connector-', function() {
     var connector = DataSource._resolveConnector('loopback-connector-xyz');
     assert(!connector.connector);
     assert(connector.error.indexOf('loopback-connector-xyz') !== -1);
   });
-  it('fails resolve invalid connector by short module name', function() {
+  it('should fail to resolve connector by short module name', function() {
     var connector = DataSource._resolveConnector('xyz');
     assert(!connector.connector);
     assert(connector.error.indexOf('loopback-connector-xyz') !== -1);
   });
-  it('fails to resolve invalid connector by full module name', function() {
+  it('should fail to resolve connector by full module name', function() {
     var connector = DataSource._resolveConnector('loopback-xyz');
     assert(!connector.connector);
     assert(connector.error.indexOf('loopback-connector-loopback-xyz') !== -1);
   });
 });
 
-describe('Model define with relations configuration', function() {
-  it('sets up hasMany relations', function(done) {
+describe('Load models with relations', function() {
+  it('should set up relations', function(done) {
     var ds = new DataSource('memory');
 
     var Post = ds.define('Post', {userId: Number, content: String});
@@ -1017,7 +1022,7 @@ describe('Model define with relations configuration', function() {
     done();
   });
 
-  it('sets up belongsTo relations', function(done) {
+  it('should set up belongsTo relations', function(done) {
     var ds = new DataSource('memory');
 
     var User = ds.define('User', {name: String});
@@ -1029,7 +1034,7 @@ describe('Model define with relations configuration', function() {
     done();
   });
 
-  it('sets up referencesMany relations', function(done) {
+  it('should set up referencesMany relations', function(done) {
     var ds = new DataSource('memory');
 
     var Post = ds.define('Post', {userId: Number, content: String});
@@ -1041,7 +1046,7 @@ describe('Model define with relations configuration', function() {
     done();
   });
 
-  it('sets up embedsMany relations', function(done) {
+  it('should set up embedsMany relations', function(done) {
     var ds = new DataSource('memory');
 
     var Post = ds.define('Post', {userId: Number, content: String});
@@ -1053,7 +1058,7 @@ describe('Model define with relations configuration', function() {
     done();
   });
 
-  it('sets up polymorphic relations', function(done) {
+  it('should set up polymorphic relations', function(done) {
     var ds = new DataSource('memory');
 
     var Author = ds.define('Author', {name: String}, {relations: {
@@ -1097,7 +1102,7 @@ describe('Model define with relations configuration', function() {
     done();
   });
 
-  it('creates a foreign key with the correct type', function(done) {
+  it('should set up foreign key with the correct type', function(done) {
     var ds = new DataSource('memory');
 
     var User = ds.define('User', {name: String, id: {type: String, id: true}});
@@ -1112,7 +1117,7 @@ describe('Model define with relations configuration', function() {
     done();
   });
 
-  it('sets up related hasMany and belongsTo relations', function(done) {
+  it('should set up hasMany and belongsTo relations', function(done) {
     var ds = new DataSource('memory');
 
     var User = ds.define('User', {name: String}, {
@@ -1167,7 +1172,7 @@ describe('Model define with relations configuration', function() {
     done();
   });
 
-  it('throws an error if a relation is missing type', function(done) {
+  it('should throw if a relation is missing type', function(done) {
     var ds = new DataSource('memory');
 
     var Post = ds.define('Post', {userId: Number, content: String});
@@ -1182,7 +1187,7 @@ describe('Model define with relations configuration', function() {
 
   });
 
-  it('throws an error if a relation type is invalid', function(done) {
+  it('should throw if the relation type is invalid', function(done) {
     var ds = new DataSource('memory');
 
     var Post = ds.define('Post', {userId: Number, content: String});
@@ -1197,7 +1202,7 @@ describe('Model define with relations configuration', function() {
 
   });
 
-  it('sets up hasMany through relations', function(done) {
+  it('should handle hasMany through', function(done) {
     var ds = new DataSource('memory');
     var Physician = ds.createModel('Physician', {
       name: String,
@@ -1234,7 +1239,7 @@ describe('Model define with relations configuration', function() {
     done();
   });
 
-  it('sets up hasMany through relations with options', function(done) {
+  it('should handle hasMany through options', function(done) {
     var ds = new DataSource('memory');
     var Physician = ds.createModel('Physician', {
       name: String,
@@ -1268,7 +1273,7 @@ describe('Model define with relations configuration', function() {
     done();
   });
 
-  it('sets up relations after attach', function(done) {
+  it('should set up relations after attach', function(done) {
     var ds = new DataSource('memory');
     var modelBuilder = new ModelBuilder();
 
@@ -1286,8 +1291,8 @@ describe('Model define with relations configuration', function() {
 
 });
 
-describe('Model define with scopes configuration', function() {
-  it('creates scopes', function(done) {
+describe('Model with scopes', function() {
+  it('should create scopes', function(done) {
     var ds = new DataSource('memory');
     var User = ds.define('User', {name: String, vip: Boolean, age: Number},
       {scopes: {vips: {where: {vip: true}}, top5: {limit: 5, order: 'age'}}});
@@ -1332,7 +1337,7 @@ describe('DataAccessObject', function() {
     error = null;
   });
 
-  it('coerces where clause for string types', function() {
+  it('should be able to coerce where clause for string types', function() {
     where = model._coerce({id: 1});
     assert.deepEqual(where, {id: '1'});
     where = model._coerce({id: '1'});
@@ -1351,7 +1356,7 @@ describe('DataAccessObject', function() {
     assert.deepEqual(where, {id: '1'});
   });
 
-  it('coerces where clause for number types', function() {
+  it('should be able to coerce where clause for number types', function() {
     where = model._coerce({age: '10'});
     assert.deepEqual(where, {age: 10});
 
@@ -1368,12 +1373,12 @@ describe('DataAccessObject', function() {
     assert.deepEqual(where, {age: {between: [10, 20]}});
   });
 
-  it('coerces where clause for array types', function() {
+  it('should be able to coerce where clause for array types', function() {
     where = model._coerce({scores: ['10', '20']});
     assert.deepEqual(where, {scores: [10, 20]});
   });
 
-  it('coerces where clause for date types', function() {
+  it('should be able to coerce where clause for date types', function() {
     var d = new Date();
     where = model._coerce({date: d});
     assert.deepEqual(where, {date: d});
@@ -1382,7 +1387,7 @@ describe('DataAccessObject', function() {
     assert.deepEqual(where, {date: d});
   });
 
-  it('coerces where clause for boolean types', function() {
+  it('should be able to coerce where clause for boolean types', function() {
     where = model._coerce({vip: 'true'});
     assert.deepEqual(where, {vip: true});
 
@@ -1406,12 +1411,12 @@ describe('DataAccessObject', function() {
 
   });
 
-  it('coerces where clause with and operators', function() {
+  it('should be able to coerce where clause with and operators', function() {
     where = model._coerce({and: [{age: '10'}, {vip: 'true'}]});
     assert.deepEqual(where, {and: [{age: 10}, {vip: true}]});
   });
 
-  it('coerces where clause with or operators', function() {
+  it('should be able to coerce where clause with or operators', function() {
     where = model._coerce({or: [{age: '10'}, {vip: 'true'}]});
     assert.deepEqual(where, {or: [{age: 10}, {vip: true}]});
   });
@@ -1426,7 +1431,7 @@ describe('DataAccessObject', function() {
     assert.deepEqual(where, {and: [{age: 10}], vip: true});
   });
 
-  it('throws an error if the where property is not an object', function() {
+  it('should throw if the where property is not an object', function() {
     try {
       // The where clause has to be an object
       model._coerce('abc');
@@ -1436,7 +1441,7 @@ describe('DataAccessObject', function() {
     assert(error, 'An error should have been thrown');
   });
 
-  it('throws an error if the where property is an array', function() {
+  it('should throw if the where property is an array', function() {
     try {
       // The where clause cannot be an array
       model._coerce([
@@ -1448,7 +1453,7 @@ describe('DataAccessObject', function() {
     assert(error, 'An error should have been thrown');
   });
 
-  it('throws an error if the and operator is not configured with an array', function() {
+  it('should throw if the and operator does not take an array', function() {
     try {
       // The and operator only takes an array of objects
       model._coerce({and: {x: 1}});
@@ -1458,7 +1463,7 @@ describe('DataAccessObject', function() {
     assert(error, 'An error should have been thrown');
   });
 
-  it('throws an error if the or operator does not take an array', function() {
+  it('should throw if the or operator does not take an array', function() {
     try {
       // The or operator only takes an array of objects
       model._coerce({or: {x: 1}});
@@ -1468,7 +1473,7 @@ describe('DataAccessObject', function() {
     assert(error, 'An error should have been thrown');
   });
 
-  it('throws an error if the or operator not configured with an array of objects', function() {
+  it('should throw if the or operator does not take an array of objects', function() {
     try {
       // The or operator only takes an array of objects
       model._coerce({or: ['x']});
@@ -1492,7 +1497,7 @@ describe('DataAccessObject', function() {
     assert(error, 'An error should have been thrown');
   });
 
-  it('throws an error if the filter property is not an object', function() {
+  it('should throw if filter property is not an object', function() {
     var filter = null;
     try {
       // The filter clause has to be an object
@@ -1503,7 +1508,7 @@ describe('DataAccessObject', function() {
     assert(error, 'An error should have been thrown');
   });
 
-  it('throws an error if the filter.limit property is not a number', function() {
+  it('should throw if filter.limit property is not a number', function() {
     try {
       // The limit param must be a valid number
       filter = model._normalize({limit: 'x'});
@@ -1513,7 +1518,7 @@ describe('DataAccessObject', function() {
     assert(error, 'An error should have been thrown');
   });
 
-  it('throws an error if the filter.limit property is nagative', function() {
+  it('should throw if filter.limit property is nagative', function() {
     try {
       // The limit param must be a valid number
       filter = model._normalize({limit: -1});
@@ -1523,7 +1528,7 @@ describe('DataAccessObject', function() {
     assert(error, 'An error should have been thrown');
   });
 
-  it('throws an error if the filter.limit property is not an integer', function() {
+  it('should throw if filter.limit property is not an integer', function() {
     try {
       // The limit param must be a valid number
       filter = model._normalize({limit: 5.8});
@@ -1533,7 +1538,7 @@ describe('DataAccessObject', function() {
     assert(error, 'An error should have been thrown');
   });
 
-  it('throws an error if filter.offset property is not a number', function() {
+  it('should throw if filter.offset property is not a number', function() {
     try {
       // The limit param must be a valid number
       filter = model._normalize({offset: 'x'});
@@ -1543,7 +1548,7 @@ describe('DataAccessObject', function() {
     assert(error, 'An error should have been thrown');
   });
 
-  it('throws an error if the filter.skip property is not a number', function() {
+  it('should throw if filter.skip property is not a number', function() {
     try {
       // The limit param must be a valid number
       filter = model._normalize({skip: '_'});
@@ -1553,17 +1558,17 @@ describe('DataAccessObject', function() {
     assert(error, 'An error should have been thrown');
   });
 
-  it('normalizes limit/offset/skip', function() {
+  it('should normalize limit/offset/skip', function() {
     filter = model._normalize({limit: '10', skip: 5});
     assert.deepEqual(filter, {limit: 10, offset: 5, skip: 5});
   });
 
-  it('uses a default value for limit', function() {
+  it('should set the default value for limit', function() {
     filter = model._normalize({skip: 5});
     assert.deepEqual(filter, {limit: 100, offset: 5, skip: 5});
   });
 
-  it('applies settings for handling undefined', function() {
+  it('should apply settings for handling undefined', function() {
     filter = model._normalize({filter: {x: undefined}});
     assert.deepEqual(filter, {filter: {}});
 
@@ -1579,35 +1584,35 @@ describe('DataAccessObject', function() {
     (function() { model._normalize({filter: {x: undefined}}); }).should.throw(/`undefined` in query/);
   });
 
-  it('does not coerce GeoPoint', function() {
+  it('should skip GeoPoint', function() {
     where = model._coerce({location: {near: {lng: 10, lat: 20}, maxDistance: 20}});
     assert.deepEqual(where, {location: {near: {lng: 10, lat: 20}, maxDistance: 20}});
   });
 
-  it('does not coerce null values', function() {
+  it('should skip null values', function() {
     where = model._coerce({date: null});
     assert.deepEqual(where, {date: null});
   });
 
-  it('does not coerce undefined values', function() {
+  it('should skip undefined values', function() {
     where = model._coerce({date: undefined});
     assert.deepEqual(where, {date: undefined});
   });
 
-  it('does not coerce to a number for a simple value that produces NaN',
+  it('should skip conversion if a simple property produces NaN for numbers',
     function() {
       where = model._coerce({age: 'xyz'});
       assert.deepEqual(where, {age: 'xyz'});
     });
 
-  it('does not coerce to a number for a simple value in an array that produces NaN',
+  it('should skip conversion if an array property produces NaN for numbers',
     function() {
       where = model._coerce({age: {inq: ['xyz', '12']}});
       assert.deepEqual(where, {age: {inq: ['xyz', 12]}});
     });
 
   // settings
-  it('gets settings in priority',
+  it('should get settings in priority',
     function() {
       ds.settings.test = 'test';
       assert.equal(model._getSetting('test'), ds.settings.test, 'Should get datasource setting');
@@ -1622,7 +1627,7 @@ describe('DataAccessObject', function() {
 
 });
 
-describe('ModelBuilder processing json files', function() {
+describe('Load models from json', function() {
   var path = require('path'),
     fs = require('fs');
 
@@ -1646,7 +1651,7 @@ describe('ModelBuilder processing json files', function() {
     return modelBuilder.buildModels(schemas, createModel);
   }
 
-  it('defines models', function() {
+  it('should be able to define models from json', function() {
 
     var models = loadSchemasSync(path.join(__dirname, 'test1-schemas.json'));
 
@@ -1667,7 +1672,7 @@ describe('ModelBuilder processing json files', function() {
     }
   });
 
-  it('attaches models to a specified dataSource', function() {
+  it('should be able to define models from json using dataSource', function() {
     var ds = new DataSource('memory');
 
     var models = loadSchemasSync(path.join(__dirname, 'test2-schemas.json'), ds);
@@ -1677,7 +1682,7 @@ describe('ModelBuilder processing json files', function() {
     assert.equal(models.Address.dataSource, ds);
   });
 
-  it('allows customization of default model base class', function() {
+  it('should allow customization of default model base class', function() {
     var modelBuilder = new ModelBuilder();
 
     var User = modelBuilder.define('User', {
@@ -1694,7 +1699,7 @@ describe('ModelBuilder processing json files', function() {
     assert(Customer.prototype instanceof User);
   });
 
-  it('accepts a model base class', function() {
+  it('should allow model base class', function() {
     var modelBuilder = new ModelBuilder();
 
     var User = modelBuilder.define('User', {
@@ -1710,7 +1715,7 @@ describe('ModelBuilder processing json files', function() {
     assert(Customer.prototype instanceof User);
   });
 
-  it('allows model extension', function(done) {
+  it('should be able to extend models', function(done) {
     var modelBuilder = new ModelBuilder();
 
     var User = modelBuilder.define('User', {
@@ -1754,7 +1759,7 @@ describe('ModelBuilder processing json files', function() {
     done(null, customer);
   });
 
-  it('allows model extension with merged settings', function(done) {
+  it('should be able to extend models with merged settings', function(done) {
     var modelBuilder = new ModelBuilder();
 
     var User = modelBuilder.define('User', {
@@ -1847,29 +1852,29 @@ describe('ModelBuilder processing json files', function() {
 });
 
 describe('DataSource constructor', function() {
-  it('takes url as the settings', function() {
+  it('Takes url as the settings', function() {
     var ds = new DataSource('memory://localhost/mydb?x=1');
     assert.equal(ds.connector.name, 'memory');
   });
 
-  it('takes connector name', function() {
+  it('Takes connector name', function() {
     var ds = new DataSource('memory');
     assert.equal(ds.connector.name, 'memory');
   });
 
-  it('takes settings object', function() {
+  it('Takes settings object', function() {
     var ds = new DataSource({connector: 'memory'});
     assert.equal(ds.connector.name, 'memory');
   });
 
-  it('takes settings object and name', function() {
+  it('Takes settings object and name', function() {
     var ds = new DataSource('x', {connector: 'memory'});
     assert.equal(ds.connector.name, 'memory');
   });
 });
 
 describe('ModelBuilder options.models', function() {
-  it('injects model classes from models', function() {
+  it('should inject model classes from models', function() {
     var builder = new ModelBuilder();
     var M1 = builder.define('M1');
     var M2 = builder.define('M2', {}, {models: {
@@ -1879,7 +1884,7 @@ describe('ModelBuilder options.models', function() {
     assert.equal(M2.M1, M1, 'M1 should be injected to M2');
   });
 
-  it('injects model classes by name in the models', function() {
+  it('should inject model classes by name in the models', function() {
     var builder = new ModelBuilder();
     var M1 = builder.define('M1');
     var M2 = builder.define('M2', {}, {models: {
@@ -1889,7 +1894,7 @@ describe('ModelBuilder options.models', function() {
     assert.equal(M2.M1, M1, 'M1 should be injected to M2');
   });
 
-  it('injects model classes by name in the models before the class is defined',
+  it('should inject model classes by name in the models before the class is defined',
     function() {
       var builder = new ModelBuilder();
       var M2 = builder.define('M2', {}, {models: {
@@ -1901,7 +1906,7 @@ describe('ModelBuilder options.models', function() {
       assert.equal(M2.M1, M1, 'M1 should be injected to M2');
     });
 
-  it('uses non-strict mode for embedded models by default', function() {
+  it('should use false strict mode for embedded models by default', function() {
     var builder = new ModelBuilder();
     var M1 = builder.define('testEmbedded', {
       name: 'string',
@@ -1919,7 +1924,7 @@ describe('ModelBuilder options.models', function() {
     assert.equal(m1.address.number, 5512, 'm1 should contain number property in address');
   });
 
-  it('uses the strictEmbeddedModels setting (true) when applied on modelBuilder', function() {
+  it('should use the strictEmbeddedModels setting (true) when applied on modelBuilder', function() {
     var builder = new ModelBuilder();
     builder.settings.strictEmbeddedModels = true;
     var M1 = builder.define('testEmbedded', {

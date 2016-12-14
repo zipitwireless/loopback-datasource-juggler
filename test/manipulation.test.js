@@ -900,6 +900,15 @@ describe('manipulation', function() {
         }, {forceId: false});
         ds.automigrate('Post', done);
       });
+      var PostForced;
+      before(function(done) {
+        PostForced = ds.define('PostForced', {
+          title: {type: String, length: 255, index: true},
+          content: {type: String},
+          comments: [String],
+        }, {forceId: true});
+        ds.automigrate('PostForced', done);
+      });
 
       it('works without options on create (promise variant)', function(done) {
         var post = {id: 123, title: 'a', content: 'AAA'};
@@ -1005,6 +1014,35 @@ describe('manipulation', function() {
         .catch(done);
       });
 
+      it('works without options on update (callback variant) when using model with forceId = true',
+      function(done) {
+        PostForced.create({title: 'a', content: 'AAA', comments: ['Comment1']},
+          function(err, post) {
+            if (err) return done(err);
+            post = post.toObject();
+            delete post.comments;
+            delete post.content;
+            post.title = 'b';
+            PostForced.replaceOrCreate(post, function(err, p) {
+              if (err) return done(err);
+              p.id.should.equal(post.id);
+              p.should.not.have.property('_id');
+              p.title.should.equal('b');
+              p.should.have.property('content', undefined);
+              p.should.have.property('comments', undefined);
+              PostForced.findById(post.id, function(err, p) {
+                if (err) return done(err);
+                p.id.should.eql(post.id);
+                p.should.not.have.property('_id');
+                p.title.should.equal('b');
+                should.not.exist(p.content);
+                should.not.exist(p.comments);
+                done();
+              });
+            });
+          });
+      });
+
       it('works without options on update (callback variant)', function(done) {
         Post.create({title: 'a', content: 'AAA', comments: ['Comment1']},
           function(err, post) {
@@ -1062,6 +1100,25 @@ describe('manipulation', function() {
           });
       });
 
+      it('works without options on create (callback variant) when using model with forceId = true',
+      function(done) {
+        var post = {title: 'a', content: 'AAA'};
+        PostForced.replaceOrCreate(post, function(err, p) {
+          if (err) return done(err);
+          var createdId = p.id;
+          p.should.not.have.property('_id');
+          p.title.should.equal(post.title);
+          p.content.should.equal(post.content);
+          PostForced.findById(createdId, function(err, p) {
+            if (err) return done(err);
+            p.id.should.equal(createdId);
+            p.should.not.have.property('_id');
+            p.title.should.equal(post.title);
+            p.content.should.equal(post.content);
+            done();
+          });
+        });
+      });
       it('works without options on create (callback variant)', function(done) {
         var post = {id: 123, title: 'a', content: 'AAA'};
         Post.replaceOrCreate(post, function(err, p) {

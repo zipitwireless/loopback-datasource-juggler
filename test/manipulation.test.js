@@ -890,7 +890,7 @@ describe('manipulation', function() {
     describe.skip('replaceById - not implemented', function() {});
   } else {
     describe('replaceOrCreate', function() {
-      var Post, PostWithForced;
+      var Post, PostWithForceId;
       var ds = getSchema();
 
       before(function(done) {
@@ -903,12 +903,12 @@ describe('manipulation', function() {
       });
 
       before(function(done) {
-        PostWithForced = ds.define('PostWithForced', {
+        PostWithForceId = ds.define('PostWithForceId', {
           title: {type: String, length: 255, index: true},
           content: {type: String},
           comments: [String],
         }, {forceId: true});
-        ds.automigrate('PostWithForced', done);
+        ds.automigrate('PostWithForceId', done);
       });
 
       it('works without options on create (promise variant)', function(done) {
@@ -1017,21 +1017,21 @@ describe('manipulation', function() {
 
       it('works without options on update when using model with forceId is true(callback variant)',
       function(done) {
-        PostWithForced.create({title: 'a', content: 'AAA', comments: ['Comment1']},
+        PostWithForceId.create({title: 'a', content: 'AAA', comments: ['Comment1']},
           function(err, post) {
             if (err) return done(err);
             post = post.toObject();
             delete post.comments;
             delete post.content;
             post.title = 'b';
-            PostWithForced.replaceOrCreate(post, function(err, p) {
+            PostWithForceId.replaceOrCreate(post, function(err, p) {
               if (err) return done(err);
               p.id.should.equal(post.id);
               p.should.not.have.property('_id');
               p.title.should.equal('b');
               p.should.have.property('content', undefined);
               p.should.have.property('comments', undefined);
-              PostWithForced.findById(post.id, function(err, p) {
+              PostWithForceId.findById(post.id, function(err, p) {
                 if (err) return done(err);
                 p.id.should.eql(post.id);
                 p.should.not.have.property('_id');
@@ -1104,8 +1104,8 @@ describe('manipulation', function() {
       it('fails when the provided id does not exist when forceId is true(callback variant)',
       function(done) {
         var post = {id: 'not-found', title: 'a', content: 'AAA'};
-        PostWithForced.create({title: 'b', content: 'BBB'}, function(err, p) {
-          PostWithForced.replaceOrCreate(post, function(err, p) {
+        PostWithForceId.create({title: 'b', content: 'BBB'}, function(err, p) {
+          PostWithForceId.replaceOrCreate(post, function(err, p) {
             should.exist(err);
             err.should.be.instanceOf(Error);
             err.message.should.containEql('Could not replace');
@@ -1117,13 +1117,13 @@ describe('manipulation', function() {
       it('works without options on create when using model when forceId is true(callback variant)',
       function(done) {
         var post = {title: 'a', content: 'AAA'};
-        PostWithForced.replaceOrCreate(post, function(err, p) {
+        PostWithForceId.replaceOrCreate(post, function(err, p) {
           if (err) return done(err);
           var createdId = p.id;
           p.should.not.have.property('_id');
           p.title.should.equal(post.title);
           p.content.should.equal(post.content);
-          PostWithForced.findById(createdId, function(err, p) {
+          PostWithForceId.findById(createdId, function(err, p) {
             if (err) return done(err);
             p.id.should.equal(createdId);
             p.should.not.have.property('_id');

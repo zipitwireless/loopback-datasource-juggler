@@ -26,7 +26,7 @@ module.exports = function(dataSource, should, connectorCapabilities) {
   }
   describe('Persistence hooks', function() {
     var ctxRecorder, hookMonitor, expectedError, hookMonitorForcedModel;
-    var TestModel, existingInstance, GeoModel, TestForcedModel, existingForceInstance;
+    var TestModel, existingInstance, GeoModel, TestModelWithForceId, existingForceInstance;
     var migrated = false;
 
     var undefinedValue = undefined;
@@ -44,7 +44,7 @@ module.exports = function(dataSource, should, connectorCapabilities) {
         extra: {type: String, required: false},
       });
 
-      TestForcedModel = dataSource.createModel('TestForcedModel', {
+      TestModelWithForceId = dataSource.createModel('TestModelWithForceId', {
         // Set id.generated to false to honor client side values
         id: {type: String, id: true, generated: false, default: uid.next},
         name: {type: String, required: true},
@@ -65,14 +65,14 @@ module.exports = function(dataSource, should, connectorCapabilities) {
             TestModel.deleteAll(cb);
           },
           function(cb) {
-            TestForcedModel.deleteAll(cb);
+            TestModelWithForceId.deleteAll(cb);
           },
           function(cb) {
             GeoModel.deleteAll(cb);
           },
         ], done);
       } else {
-        dataSource.automigrate([TestModel.modelName, 'GeoModel', 'TestForcedModel'], function(err) {
+        dataSource.automigrate([TestModel.modelName, 'GeoModel', 'TestModelWithForceId'], function(err) {
           migrated = true;
           done(err);
         });
@@ -96,8 +96,8 @@ module.exports = function(dataSource, should, connectorCapabilities) {
               {name: 'Rome', location: location1},
               {name: 'Tokyo', location: location2},
             ], function(err) {
-              TestForcedModel.create({name: 'foo'}, function(err, instance) {
-                TestForcedModel.findById(instance.id, function(err, instance) {
+              TestModelWithForceId.create({name: 'foo'}, function(err, instance) {
+                TestModelWithForceId.findById(instance.id, function(err, instance) {
                   existingForceInstance = instance;
                   done(err);
                 });
@@ -2246,7 +2246,7 @@ module.exports = function(dataSource, should, connectorCapabilities) {
         it('triggers hooks in the correct order on create', function(done) {
           monitorHookExecutionForcedModel();
 
-          TestForcedModel.replaceOrCreate(
+          TestModelWithForceId.replaceOrCreate(
             {name: 'not-found'},
             function(err, record, created) {
               if (err) return done(err);
@@ -2263,7 +2263,7 @@ module.exports = function(dataSource, should, connectorCapabilities) {
 
         it('triggers hooks in the correct order on replace', function(done) {
           monitorHookExecutionForcedModel();
-          TestForcedModel.replaceOrCreate(
+          TestModelWithForceId.replaceOrCreate(
             {id: existingForceInstance.id, name: 'new name'},
             function(err, record, created) {
               if (err) return done(err);
@@ -2316,7 +2316,7 @@ module.exports = function(dataSource, should, connectorCapabilities) {
         });
 
         it('should throw error for forceId when id is passed - forced', function(done) {
-          TestForcedModel.replaceOrCreate(
+          TestModelWithForceId.replaceOrCreate(
             {id: 'not-found', name: 'not found'},
             function(err, instance) {
               should.exist(err);
@@ -2340,13 +2340,13 @@ module.exports = function(dataSource, should, connectorCapabilities) {
         });
 
         it('triggers `access` hook on replace - forced', function(done) {
-          TestForcedModel.observe('access', ctxRecorder.recordAndNext());
+          TestModelWithForceId.observe('access', ctxRecorder.recordAndNext());
 
-          TestForcedModel.replaceOrCreate(
+          TestModelWithForceId.replaceOrCreate(
             {id: existingForceInstance.id, name: 'new name'},
             function(err, instance) {
               if (err) return done(err);
-              ctxRecorder.records.should.eql(aCtxForModel(TestForcedModel, {query: {
+              ctxRecorder.records.should.eql(aCtxForModel(TestModelWithForceId, {query: {
                 where: {id: existingForceInstance.id},
               }}));
               done();
@@ -2368,9 +2368,9 @@ module.exports = function(dataSource, should, connectorCapabilities) {
         });
 
         it('does not trigger `access` on missing id - forced', function(done) {
-          TestForcedModel.observe('access', ctxRecorder.recordAndNext());
+          TestModelWithForceId.observe('access', ctxRecorder.recordAndNext());
 
-          TestForcedModel.replaceOrCreate(
+          TestModelWithForceId.replaceOrCreate(
             {name: 'new name'},
             function(err, instance) {
               if (err) return done(err);
@@ -2392,12 +2392,12 @@ module.exports = function(dataSource, should, connectorCapabilities) {
         });
 
         it('applies updates from `access` hook when found - forced', function(done) {
-          TestForcedModel.observe('access', function(ctx, next) {
+          TestModelWithForceId.observe('access', function(ctx, next) {
             ctx.query = {where: {id: {neq: existingForceInstance.id}}};
             next();
           });
 
-          TestForcedModel.replaceOrCreate(
+          TestModelWithForceId.replaceOrCreate(
             {id: existingForceInstance.id, name: 'new name'},
             function(err, instance) {
               if (err) return done(err);
@@ -3566,7 +3566,7 @@ module.exports = function(dataSource, should, connectorCapabilities) {
         query = null;
       }
 
-      TestForcedModel.find(query, {notify: false}, cb);
+      TestModelWithForceId.find(query, {notify: false}, cb);
     }
 
     function findTestModels(query, cb) {
@@ -3587,7 +3587,7 @@ module.exports = function(dataSource, should, connectorCapabilities) {
     }
 
     function monitorHookExecutionForcedModel(hookNames) {
-      hookMonitorForcedModel.install(TestForcedModel, hookNames);
+      hookMonitorForcedModel.install(TestModelWithForceId, hookNames);
     }
     require('./operation-hooks.suite')(dataSource, should, connectorCapabilities);
   });

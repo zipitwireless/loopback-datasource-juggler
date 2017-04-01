@@ -1043,7 +1043,7 @@ describe('Model define with relations configuration', function() {
     done();
   });
 
-  it('sets up polymorphic relations', function(done) {
+  it('sets up polymorphic relations (related model is not attached yet)', function(done) {
     var ds = new DataSource('memory');
 
     var Author = ds.define('Author', {name: String}, {relations: {
@@ -1056,6 +1056,96 @@ describe('Model define with relations configuration', function() {
     assert(Author.relations['pictures']);
     assert.deepEqual(Author.relations['pictures'].toJSON(), {
       name: 'pictures',
+      type: 'hasMany',
+      modelFrom: 'Author',
+      keyFrom: 'id',
+      modelTo: 'Picture',
+      keyTo: 'imageableId',
+      multiple: true,
+      polymorphic: {
+        as: 'imageable',
+        foreignKey: 'imageableId',
+        discriminator: 'imageableType',
+      },
+    });
+
+    assert(Picture.relations['imageable']);
+    assert.deepEqual(Picture.relations['imageable'].toJSON(), {
+      name: 'imageable',
+      type: 'belongsTo',
+      modelFrom: 'Picture',
+      keyFrom: 'imageableId',
+      modelTo: '<polymorphic>',
+      keyTo: 'id',
+      multiple: false,
+      polymorphic: {
+        as: 'imageable',
+        foreignKey: 'imageableId',
+        discriminator: 'imageableType',
+      },
+    });
+    done();
+  });
+
+  it('sets up polymorphic relations (related model is already attached ' +
+    'and singularized relation name equals lowercased related model name)', function(done) {
+    var ds = new DataSource('memory');
+
+    var Picture = ds.define('Picture', {name: String}, {relations: {
+      imageable: {type: 'belongsTo', polymorphic: true},
+    }});
+    var Author = ds.define('Author', {name: String}, {relations: {
+      pictures: {type: 'hasMany', model: 'Picture', polymorphic: 'imageable'},
+    }});
+
+    assert(Author.relations['pictures']);
+    assert.deepEqual(Author.relations['pictures'].toJSON(), {
+      name: 'pictures',
+      type: 'hasMany',
+      modelFrom: 'Author',
+      keyFrom: 'id',
+      modelTo: 'Picture',
+      keyTo: 'imageableId',
+      multiple: true,
+      polymorphic: {
+        as: 'imageable',
+        foreignKey: 'imageableId',
+        discriminator: 'imageableType',
+      },
+    });
+
+    assert(Picture.relations['imageable']);
+    assert.deepEqual(Picture.relations['imageable'].toJSON(), {
+      name: 'imageable',
+      type: 'belongsTo',
+      modelFrom: 'Picture',
+      keyFrom: 'imageableId',
+      modelTo: '<polymorphic>',
+      keyTo: 'id',
+      multiple: false,
+      polymorphic: {
+        as: 'imageable',
+        foreignKey: 'imageableId',
+        discriminator: 'imageableType',
+      },
+    });
+    done();
+  });
+
+  it('sets up polymorphic relations (related model is already attached ' +
+    'and singularized relation name differs from lowercased related model name)', function(done) {
+    var ds = new DataSource('memory');
+
+    var Picture = ds.define('Picture', {name: String}, {relations: {
+      imageable: {type: 'belongsTo', polymorphic: true},
+    }});
+    var Author = ds.define('Author', {name: String}, {relations: {
+      photos: {type: 'hasMany', model: 'Picture', polymorphic: 'imageable'},
+    }});
+
+    assert(Author.relations['photos']);
+    assert.deepEqual(Author.relations['photos'].toJSON(), {
+      name: 'photos',
       type: 'hasMany',
       modelFrom: 'Author',
       keyFrom: 'id',

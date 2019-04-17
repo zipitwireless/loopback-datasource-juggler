@@ -1056,13 +1056,20 @@ describe('basic-querying', function() {
   });
 
   describe('updateAll', function() {
-    it('coerces primitive datatypes on update', async () => {
-      const numAndDateModel = db.define('numAndDateModel', {
+
+    let numAndDateModel;
+
+    before(function() {
+      numAndDateModel = db.define('numAndDateModel', {
         dateProp: Date,
         dateArray: [Date],
         numProp: Number,
         numArray: [Number],
       });
+      return db.automigrate('numAndDateModel');
+    });
+
+    it('coerces primitive datatypes on update', async () => {
       const createDate = new Date('2019-02-21T12:00:00').toISOString();
       const createData = {
         dateProp: createDate,
